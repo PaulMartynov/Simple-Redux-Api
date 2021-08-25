@@ -1,48 +1,30 @@
-export type Store<State = any, Action = { type: string }> = {
-  getState(): State;
-  dispatch(action: Action): any;
-  subscribe(cb: () => void): () => void;
-};
+import { Reducer, State, Store, Action, Listener } from "./types";
 
-export type Reducer<State, Action> = (
-  state: State | undefined,
-  action: Action
-) => State;
-
-export type Middleware<State, Action> = (
-  store: Store<State, Action>
-) => (next: (action: Action) => any) => (action: Action) => any;
-
-export type CreateStore<State, Action> = (
-  reducer: Reducer<State, Action>,
-  initialState?: State | undefined,
-  middlewares?: Middleware<State, Action>[]
-) => Store<State, Action>;
-
-export function createStore<State, Action>(
-  reducer: Reducer<State, Action>,
-  initialState?: State | undefined,
-  middlewares?: Middleware<State, Action>[]
+export function createStore(
+  reducer: Reducer,
+  initialState?: State | undefined
 ): Store {
   let state = initialState;
-  let subscribers: any[] = [];
+  const subscribers: Set<Listener> = new Set();
+  let storeReducer = reducer;
   return {
-    getState() {
+    getState(): State | undefined {
       return state;
     },
-    dispatch(action: any) {
-      state = reducer(state, action);
+    dispatch(action: Action) {
+      state = storeReducer(state, action);
       subscribers.forEach((fn) => {
-        fn();
+        fn(state);
       });
     },
-    subscribe(cb: any): any {
-      subscribers.push(cb);
+    subscribe(cb: () => void): () => void {
+      subscribers.add(cb);
       return () => {
-        subscribers = subscribers.filter((fn) => {
-          return fn !== cb;
-        });
+        subscribers.delete(cb);
       };
+    },
+    replaceReducer(newReducer: Reducer): void {
+      storeReducer = newReducer;
     },
   };
 }

@@ -1,28 +1,13 @@
-type CombineReducer<ReducersConfig = any, Action = { type: any }> = (
-  config: {
-    [key in keyof ReducersConfig]: (
-      state: ReducersConfig[key] | undefined,
-      action: Action
-    ) => ReducersConfig[key];
-  }
-) => (
-  state:
-    | {
-        [key in keyof ReducersConfig]: ReducersConfig[key];
-      }
-    | undefined,
-  action: Action
-) => {
-  [key in keyof ReducersConfig]: ReducersConfig[key];
-};
-// put your code here
-export const combineReducers: CombineReducer = (config) => {
-  return (state, action) => {
-    const newState = {};
+import { Action, Reducer, State } from "./types";
+
+export function combineReducers(
+  config: Record<string, Reducer>
+): (state: State, action: Action) => Record<string, unknown> {
+  return (state: State, action: Action) => {
+    const newState: Record<string, unknown> = {};
     Object.keys(config).forEach((key) => {
-      // @ts-ignore
       newState[key] = config[key](state ? state[key] : undefined, action);
     });
     return newState;
   };
-};
+}

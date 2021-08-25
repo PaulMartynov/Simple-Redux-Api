@@ -66,8 +66,4 @@ describe("createStore", () => {
       expect(spy).toHaveBeenCalledTimes(1);
     });
   });
-
-  // describe("middlewares", () => {
-  //
-  // });
 });
