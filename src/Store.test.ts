@@ -1,4 +1,5 @@
 import { createStore } from "./Store";
+import { Action, Reducer } from "./types";
 
 describe("createStore", () => {
   describe("public interface", () => {
@@ -64,6 +65,33 @@ describe("createStore", () => {
       unsubscribe();
       store.dispatch(action2);
       expect(spy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("test replaceReducer function", () => {
+    const initialState = { val: Math.random() };
+    const reducer: Reducer = jest.fn();
+    const store = createStore(reducer, initialState);
+    it("is a function", () => {
+      expect(store.replaceReducer).toBeInstanceOf(Function);
+    });
+    it("replace old reducer", () => {
+      const newReducer = jest.fn();
+      const action: Action = {
+        type: "action",
+        payload: {
+          val: Math.random(),
+        },
+      };
+
+      store.dispatch(action);
+      expect(reducer).toHaveBeenCalledTimes(1);
+
+      store.replaceReducer(newReducer);
+
+      store.dispatch(action);
+      expect(newReducer).toHaveBeenCalledTimes(1);
+      expect(reducer).toHaveBeenCalledTimes(1);
     });
   });
 });

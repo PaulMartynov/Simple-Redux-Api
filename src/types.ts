@@ -9,3 +9,13 @@ export type Store = {
   subscribe(cb: () => void): () => void;
   replaceReducer(newReducer: Reducer): void;
 };
+
+export type Middleware = (
+  store: Store
+) => (next: (action: Action) => any) => (action: Action) => any;
+
+export type CreateStore = (
+  reducer: Reducer,
+  initialState?: State | undefined,
+  middlewares?: Middleware[]
+) => Store;
