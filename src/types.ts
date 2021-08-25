@@ -1,7 +1,4 @@
-export interface Action {
-  type: string;
-  [key: string]: any;
-}
+export type Action = { type: string; payload?: unknown };
 export type State = any;
 export type Listener = (state: State) => void;
 export type Reducer = (state: State, action: Action) => State;

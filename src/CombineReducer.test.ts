@@ -6,8 +6,7 @@ describe("combineReducers", () => {
   });
 
   it("returns a function", () => {
-    // @ts-ignore
-    expect(combineReducers()).toBeInstanceOf(Function);
+    expect(combineReducers({})).toBeInstanceOf(Function);
   });
 
   it("returns a reducer based on the config (initial state)", () => {
@@ -27,16 +26,14 @@ describe("combineReducers", () => {
       a: jest.fn((state = 5, action) => state + action.payload),
       b: jest.fn((state = 6, action) => state - action.payload),
     };
-    // @ts-ignore
-    const reducer = combineReducers<State, { payload: number }>(config);
+    const reducer = combineReducers(config);
 
     const state: State = {
       a: 55,
       b: 66,
     };
-    const action1 = { payload: 1 };
-    // @ts-ignore
-    const newState1 = reducer(state, { payload: 1 });
+    const action1 = { type: "1", payload: 1 };
+    const newState1 = reducer(state, { type: "1", payload: 1 });
 
     expect(config.a).toHaveBeenCalledWith(55, action1);
     expect(config.b).toHaveBeenCalledWith(66, action1);
@@ -46,8 +43,7 @@ describe("combineReducers", () => {
       b: 65,
     });
 
-    const action2 = { payload: 2 };
-    // @ts-ignore
+    const action2 = { type: "2", payload: 2 };
     const newState2 = reducer(newState1, action2);
     expect(config.a).toHaveBeenCalledWith(56, action2);
     expect(config.b).toHaveBeenCalledWith(65, action2);
