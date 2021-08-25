@@ -36,10 +36,12 @@ class Store {
   }
 }
 
+export type MiddlewareFn = (store: Store) => Store;
+
 export function createStore(
   reducer: Reducer,
   initialState?: State | undefined,
-  middlewares?: any[]
+  middlewares?: MiddlewareFn[]
 ): Store {
   let store = new Store(reducer, initialState);
   if (middlewares) {

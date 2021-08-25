@@ -69,9 +69,9 @@ describe("createStore", () => {
   });
 
   describe("test replaceReducer function", () => {
-    const initialState = { val: Math.random() };
+    const state = { name: "Bob" };
     const reducer: Reducer = jest.fn();
-    const store = createStore(reducer, initialState);
+    const store = createStore(reducer, state);
     it("is a function", () => {
       expect(store.replaceReducer).toBeInstanceOf(Function);
     });
@@ -80,7 +80,7 @@ describe("createStore", () => {
       const action: Action = {
         type: "action",
         payload: {
-          val: Math.random(),
+          name: "James",
         },
       };
 
@@ -92,6 +92,19 @@ describe("createStore", () => {
       store.dispatch(action);
       expect(newReducer).toHaveBeenCalledTimes(1);
       expect(reducer).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("middlewares", () => {
+    it("using middlewares", () => {
+      const state = { name: "Bob" };
+      const reducer: Reducer = jest.fn();
+      const middlewareFn = jest.fn();
+      const middlewares = [middlewareFn];
+      const store = createStore(reducer, state, middlewares);
+
+      expect(store).not.toBeNull();
+      expect(middlewareFn).toHaveBeenCalledTimes(1);
     });
   });
 });

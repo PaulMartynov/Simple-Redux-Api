@@ -7,7 +7,7 @@ export function applyMiddleware(...middlewares: any[]) {
       reducer: Reducer,
       state: State
     ): {
-      dispatch: (action: Action) => any;
+      dispatch: (action: Action) => void;
       getState: () => State | undefined;
     } => {
       const store: Store = createStore(reducer, state);

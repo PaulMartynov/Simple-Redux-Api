@@ -11,8 +11,8 @@ describe("combineReducers", () => {
 
   it("returns a reducer based on the config (initial state)", () => {
     const reducer = combineReducers({
-      a: (state = 2, action) => state,
-      b: (state = "hop", action) => state,
+      a: (state = 2) => state,
+      b: (state = "hop") => state,
     });
     expect(reducer(undefined, { type: "unknown" })).toEqual({
       a: 2,
